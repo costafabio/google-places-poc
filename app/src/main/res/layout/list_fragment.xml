@@ -19,7 +19,8 @@
             android:gravity="center_vertical"
             android:text="Choose Radius"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary" />
 
         <Spinner
             android:id="@+id/radiusSpinner"

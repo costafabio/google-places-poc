@@ -1,5 +1,7 @@
 package com.fabiocosta.googleplacespoc.ui.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,13 +33,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -46,12 +53,13 @@ public class HomeFragment extends ListFragment {
     private final String TAG = "GooglePlacesPOC";
     private HomeViewModel homeViewModel;
     private LocationManager locationManager;
-    private static final String GOOGLE_API_KEY = "";
+    private static final String GOOGLE_API_KEY = "AIzaSyDvxrTUkTrS0-0KXW4q0b-kSJQOzZwUOuE";
     private PlaceAdapter mListAdapter;
     private static String mRadiusSelected = "";
     private static int counter = 0;
     private GooglePlaceHelper googlePlaceHelper;
     private FusedLocationProviderClient fusedLocationClient;
+    private JSONArray mSavedSearchesJsonArray;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -98,6 +106,22 @@ public class HomeFragment extends ListFragment {
         // Construct the data source
         //TODO: LOAD CURRENT LIST FROM STORAGE
         ArrayList<Place> arrayOfPlaces = new ArrayList<Place>();
+
+        // retrieve saved search results
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String savedSearchResults = sharedPref.getString(getString(R.string.saved_current_search_results), null);
+        if(savedSearchResults != null) {
+            Log.i(TAG, "*** LOADED SAVED SEARCH RESULTS: " + savedSearchResults);
+            try {
+                mSavedSearchesJsonArray = new JSONArray(savedSearchResults);
+                Log.i(TAG, "*** NUMBER OF SEARCHES SAVED: " + mSavedSearchesJsonArray.length());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i(TAG, "*** No saved search results loaded...");
+        }
+
         // Create the adapter to convert the array to views
         mListAdapter = new PlaceAdapter(getContext(), arrayOfPlaces);
         setListAdapter(mListAdapter);
@@ -193,21 +217,41 @@ public class HomeFragment extends ListFragment {
             } catch (Exception e) {
                 Log.d("Google Place Read Task", e.toString());
             }
+            /*// save search results as JSON
+            JSONObject currentSearchResultsJson = new JSONObject();
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+                String currentDate = sdf.format(new Date());
+                currentSearchResultsJson.put("search_date", currentDate);
+                currentSearchResultsJson.put("search_results", (Object)googlePlacesData);
+                // save to disk
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                Log.i(TAG, "*** CURRENT SEARCH RESULTS: " + currentSearchResultsJson.toString());
+                if(mSavedSearchesJsonArray == null)
+                    mSavedSearchesJsonArray = new JSONArray();
+                mSavedSearchesJsonArray.put(currentSearchResultsJson);
+                editor.putString(getString(R.string.saved_current_search_results), mSavedSearchesJsonArray.toString());
+                editor.commit();
+                Log.i(TAG, "Search results saved to disk");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }*/
             return googlePlacesData;
         }
 
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, "Entering onPostExecute()...");
-            PlacesListTask placesListTask = new PlacesListTask();
+            ProcessGooglePlaceListTask processGooglePlaceListTask = new ProcessGooglePlaceListTask();
             Object[] toPass = new Object[1];
             toPass[0] = result;
-            placesListTask.execute(toPass);
+            processGooglePlaceListTask.execute(toPass);
         }
     }
 
 
-    private class PlacesListTask extends AsyncTask<Object, Integer, List<HashMap<String, String>>> {
+    private class ProcessGooglePlaceListTask extends AsyncTask<Object, Integer, List<HashMap<String, String>>> {
         private static final String TAG = "PlacesListTask";
         JSONObject googlePlacesJson;
 
@@ -229,33 +273,62 @@ public class HomeFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<HashMap<String, String>> list) {
             Log.i(TAG, "Entering onPostExecute(): " + list.size() + " results returned");
-            // go through list of places returned up to the max number to show (10)
-            for (int i = 0; i < list.size() && i < MAX_NUMBER_OF_PLACES_TO_DISPLAY; i++) {
-                HashMap<String, String> googlePlace = list.get(i);
-                double lat = Double.parseDouble(googlePlace.get("lat"));
-                double lon = Double.parseDouble(googlePlace.get("lon"));
-                float rating = Float.parseFloat(googlePlace.get("rating"));
-                String placeName = googlePlace.get("place_name");
-                LatLng latLng = new LatLng(lat, lon);
-                String photoRef = googlePlace.get("photo_reference");
-                String imgUrl = null;
-                if(photoRef != null) {
-                    imgUrl = googlePlaceHelper.getImageURL(photoRef, 300);
-                }
-                Log.i(TAG, "-> Place #" + i +": name=" + placeName + ", lat=" + lat + ", lon=" + lon + ", rating=" + rating + ", photo_reference=" + photoRef);
+            // save search results as JSON
+            JSONObject currentSearchResultsJson = new JSONObject();
+            JSONArray resultsJsonArray = new JSONArray();
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+                String currentDate = sdf.format(new Date());
+                currentSearchResultsJson.put("search_date", currentDate);
+                // go through list of places returned up to the max number to show (10)
+                for (int i = 0; i < list.size() && i < MAX_NUMBER_OF_PLACES_TO_DISPLAY; i++) {
+                    HashMap<String, String> googlePlace = list.get(i);
+                    double lat = Double.parseDouble(googlePlace.get("lat"));
+                    double lon = Double.parseDouble(googlePlace.get("lon"));
+                    float rating = Float.parseFloat(googlePlace.get("rating"));
+                    String placeName = googlePlace.get("place_name");
+                    LatLng latLng = new LatLng(lat, lon);
+                    String photoRef = googlePlace.get("photo_reference");
+                    String imgUrl = null;
+                    if(photoRef != null) {
+                        imgUrl = googlePlaceHelper.getImageURL(photoRef, 300);
+                    }
+                    Log.i(TAG, "-> Place #" + i +": name=" + placeName + ", lat=" + lat + ", lon=" + lon + ", rating=" + rating + ", photo_reference=" + photoRef);
 
-                // finally spawn task to add places to the list
-                AddToListTask addToListTask = new AddToListTask();
-                Object[] toPass = new Object[3];
-                toPass[0] = placeName;
-                toPass[1] = imgUrl;
-                toPass[2] = rating;
-                addToListTask.execute(toPass);
+                    // add place to JSON structure to be saved later
+                    JSONObject placeJson = new JSONObject();
+                    placeJson.put("place_name", placeName);
+                    placeJson.put("place_imgUrl", imgUrl);
+                    placeJson.put("place_rating", rating);
+                    resultsJsonArray.put(placeJson);
+
+                    // finally spawn task to add places to the list
+                    AddPlaceToListTask addToListTask = new AddPlaceToListTask();
+                    Object[] toPass = new Object[3];
+                    toPass[0] = placeName;
+                    toPass[1] = imgUrl;
+                    toPass[2] = rating;
+                    addToListTask.execute(toPass);
+                }
+
+                // add current search results into historical array
+                if(mSavedSearchesJsonArray == null)
+                    mSavedSearchesJsonArray = new JSONArray();
+                currentSearchResultsJson.put("search_results", resultsJsonArray);
+                mSavedSearchesJsonArray.put(currentSearchResultsJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            // now save search result to storage
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.saved_current_search_results), mSavedSearchesJsonArray.toString());
+            editor.commit();
+            Log.i(TAG, "Search results saved to disk");
         }
     }
 
-    private class AddToListTask extends AsyncTask<Object, Integer, HashMap<String, Object>> {
+    private class AddPlaceToListTask extends AsyncTask<Object, Integer, HashMap<String, Object>> {
         private static final String TAG = "AddToListTask";
 
         @Override
