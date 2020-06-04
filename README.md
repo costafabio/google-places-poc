@@ -26,8 +26,8 @@ The correct operation of this app relies that the following dependencies are met
 
 ## App install
 
-Grab the APK from ./app/build/outputs/apk/debug/app-debug.apk and install to your device using ADB:
+Grab the APK from ./extras/google-places-poc.apk and install to your device using ADB:
 
 ```
-adb install app-debug.apk
+adb install google-places-poc.apk
 ```

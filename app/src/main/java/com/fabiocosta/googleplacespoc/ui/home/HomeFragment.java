@@ -46,7 +46,7 @@ public class HomeFragment extends ListFragment {
     private final String TAG = "GooglePlacesPOC";
     private HomeViewModel homeViewModel;
     private LocationManager locationManager;
-    private static final String GOOGLE_API_KEY = "AIzaSyDvxrTUkTrS0-0KXW4q0b-kSJQOzZwUOuE";
+    private static final String GOOGLE_API_KEY = "";
     private PlaceAdapter mListAdapter;
     private static String mRadiusSelected = "";
     private static int counter = 0;
