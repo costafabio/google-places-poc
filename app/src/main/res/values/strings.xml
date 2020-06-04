@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">GooglePlacesPoc</string>
+    <string name="title_home">Home</string>
+    <string name="title_history">History</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string-array name="array_radius">
+        <item>5 miles</item>
+        <item>10 miles</item>
+        <item>15 miles</item>
+        <item>20 miles</item>
+        <item>25 miles</item>
+        <item>50 miles</item>
+    </string-array>
+</resources>

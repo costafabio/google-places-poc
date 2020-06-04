@@ -1,0 +1,130 @@
+=> Request URL:  https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=37.4219899,-122.0840348&radius=10&types=establishment&sensor=true&key=AIzaSyDvxrTUkTrS0-0KXW4q0b-kSJQOzZwUOuE
+
+{
+   "html_attributions" : [],
+   "results" : [
+      {
+         "geometry" : {
+            "location" : {
+               "lat" : 37.3860517,
+               "lng" : -122.0838511
+            },
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.469887,
+                  "lng" : -122.0446721
+               },
+               "southwest" : {
+                  "lat" : 37.3567832,
+                  "lng" : -122.1178619
+               }
+            }
+         },
+         "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png",
+         "id" : "bb51f066ff3fd0b033db94b4e6172da84b8ae111",
+         "name" : "Mountain View",
+         "photos" : [
+            {
+               "height" : 750,
+               "html_attributions" : [
+                  "\u003ca href=\"https://maps.google.com/maps/contrib/107141142071312464603\"\u003eRabiul Jebon\u003c/a\u003e"
+               ],
+               "photo_reference" : "CmRaAAAAJhIq7LZy2AypLgDd26bSEcVYgUXqlZ9rsCAQcx5vs2wb9EzOsY7g54ct3PjXMgCt5e8IvcpG-AryCObhnL30B_v3gqivKGikRXVdEg_JFs8xSv_ZjOVbT59OVRO1WF_-EhDFapforLiQX5O7ZkognBcRGhRpIeg318I-qJTd4X5eQSgyLzOOvw",
+               "width" : 600
+            }
+         ],
+         "place_id" : "ChIJiQHsW0m3j4ARm69rRkrUF3w",
+         "reference" : "ChIJiQHsW0m3j4ARm69rRkrUF3w",
+         "scope" : "GOOGLE",
+         "types" : [ "locality", "political" ],
+         "vicinity" : "Mountain View"
+      },
+      {
+         "business_status" : "OPERATIONAL",
+         "geometry" : {
+            "location" : {
+               "lat" : 37.4219999,
+               "lng" : -122.0840575
+            },
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.42495035,
+                  "lng" : -122.0798555
+               },
+               "southwest" : {
+                  "lat" : 37.41967414999999,
+                  "lng" : -122.0920887
+               }
+            }
+         },
+         "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+         "id" : "3a936e96ddcb18b4fa8a2974ebc8876c3108fef2",
+         "name" : "Googleplex",
+         "photos" : [
+            {
+               "height" : 464,
+               "html_attributions" : [
+                  "\u003ca href=\"https://maps.google.com/maps/contrib/105614190821775258232\"\u003eNithin Edadan\u003c/a\u003e"
+               ],
+               "photo_reference" : "CmRaAAAAMxsGeZsedQ1LCcZdlmhEV8eKf-h9DUj8XTkEV0GhIJPgq0EWXss-gCRnMh1wCI3ZjTvQTkR4Ri7WGcken-HdAvJVrYOkrmLOchHoAEOrdX5V9SxIZKTTnnXnw4dLP8FpEhALVByRxsuTAHvA6oPbzoceGhSF-7qiOURrp6nZeViL7FZWsCfyBg",
+               "width" : 696
+            }
+         ],
+         "place_id" : "ChIJj61dQgK6j4AR4GeTYWZsKWw",
+         "plus_code" : {
+            "compound_code" : "CWC8+Q9 Mountain View, CA, United States",
+            "global_code" : "849VCWC8+Q9"
+         },
+         "rating" : 4.3,
+         "reference" : "ChIJj61dQgK6j4AR4GeTYWZsKWw",
+         "scope" : "GOOGLE",
+         "types" : [ "point_of_interest", "establishment" ],
+         "user_ratings_total" : 8898,
+         "vicinity" : "1600 Amphitheatre Parkway, Mountain View"
+      },
+      {
+         "business_status" : "OPERATIONAL",
+         "geometry" : {
+            "location" : {
+               "lat" : 37.4219982,
+               "lng" : -122.0839998
+            },
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.4236814802915,
+                  "lng" : -122.0824622197085
+               },
+               "southwest" : {
+                  "lat" : 37.4209835197085,
+                  "lng" : -122.0851601802915
+               }
+            }
+         },
+         "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+         "id" : "83b5baeffedbcdb817e2c3c40b6de6abdef05ddb",
+         "name" : "Google Building 41",
+         "photos" : [
+            {
+               "height" : 272,
+               "html_attributions" : [
+                  "\u003ca href=\"https://maps.google.com/maps/contrib/105228305554482798136\"\u003eAlamine Hadrati\u003c/a\u003e"
+               ],
+               "photo_reference" : "CmRaAAAA8DQAKRLgMzarTaPi0GU7jLHmpat3Zj21mAp81PXMUwdCNYBqnRVNc_9jf_xyuk-GnBAjlD_rmcByC7vrZkZcScfnfLUl7xT-bcmA4YLEWq38sQEgg4FEcVNJXE4AOJwpEhBgLTbE6Km6A8s8vOalzxeBGhQd1d7WYQZV5fBtCflFBXMuvZfliQ",
+               "width" : 408
+            }
+         ],
+         "place_id" : "ChIJ7_iv8QK6j4ARmw8FEqpEySE",
+         "plus_code" : {
+            "compound_code" : "CWC8+QC Mountain View, CA, United States",
+            "global_code" : "849VCWC8+QC"
+         },
+         "rating" : 3.6,
+         "reference" : "ChIJ7_iv8QK6j4ARmw8FEqpEySE",
+         "scope" : "GOOGLE",
+         "types" : [ "point_of_interest", "establishment" ],
+         "user_ratings_total" : 90,
+         "vicinity" : "1600 Amphitheatre Parkway, Mountain View"
+      }
+   ],
+   "status" : "OK"
+}
