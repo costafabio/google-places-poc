@@ -24,6 +24,7 @@ import com.fabiocosta.googleplacespoc.GooglePlaceHelper;
 import com.fabiocosta.googleplacespoc.HttpHelper;
 import com.fabiocosta.googleplacespoc.PlacesHelper;
 import com.fabiocosta.googleplacespoc.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,7 +34,6 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +51,7 @@ public class HomeFragment extends ListFragment {
     private static String mRadiusSelected = "";
     private static int counter = 0;
     private GooglePlaceHelper googlePlaceHelper;
+    private FusedLocationProviderClient fusedLocationClient;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -101,6 +102,8 @@ public class HomeFragment extends ListFragment {
         mListAdapter = new PlaceAdapter(getContext(), arrayOfPlaces);
         setListAdapter(mListAdapter);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+
         googlePlaceHelper = new GooglePlaceHelper(GOOGLE_API_KEY);
     }
 
@@ -114,9 +117,7 @@ public class HomeFragment extends ListFragment {
     private void getCurrentLocation() {
         Log.i(TAG, "Getting current location...");
         if (ContextCompat.checkSelfPermission( getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ) {
-            Task<Location> locationResult = LocationServices
-                    .getFusedLocationProviderClient(getContext())
-                    .getLastLocation()
+            Task<Location> locationResult = fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
