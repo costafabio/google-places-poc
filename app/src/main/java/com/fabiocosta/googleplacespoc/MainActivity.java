@@ -1,6 +1,7 @@
 package com.fabiocosta.googleplacespoc;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         //show error dialog if GoolglePlayServices not available
         if (!isGooglePlayServicesAvailable()) {
-            finish();
+            showErrorAlertDialog("ERROR: Google Play Services not available in this device...");
         }
     }
 
@@ -71,6 +73,17 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Google Play Services not available!");
             return false;
         }
+    }
+
+    private void showErrorAlertDialog(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg).setTitle("ERROR");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

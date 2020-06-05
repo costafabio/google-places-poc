@@ -60,6 +60,8 @@ public class HomeFragment extends ListFragment {
     private FusedLocationProviderClient fusedLocationClient;
     private JSONArray mSavedSearchesJsonArray;
     private static ArrayList<Place> arrayOfPlaces = new ArrayList<Place>();
+    private static Location mCurrentLocation;
+    private static int mCurrentRadius;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -125,7 +127,7 @@ public class HomeFragment extends ListFragment {
 
 
     private void initiateSearch() {
-        int radius = getRadiusInMiles();
+        int radius = getUserSelectedRadiusInMiles();
         Log.i(TAG, "Initiating search with a radius of " + radius + " miles...");
         // first clear contents of the Place array
         arrayOfPlaces.clear();
@@ -160,13 +162,17 @@ public class HomeFragment extends ListFragment {
     }
 
     public void onLocationChanged(Location location) {
-        int radius = getRadiusInMiles();
+        int radius = getUserSelectedRadiusInMiles();
         Log.i(TAG, "Got location fix: lat=" + location.getLatitude() + ", lon=" + location.getLongitude());
-        // Read from Google Places for this location
+        // read from Google Places for this location
         readGooglePlaces(location, radius);
     }
 
     private void readGooglePlaces(Location location, int radius) {
+        // save location and radius
+        mCurrentLocation = location;
+        mCurrentRadius = radius;
+
         double lat = location.getLatitude();
         double lon = location.getLongitude();
         String url = googlePlaceHelper.getNearbySearchURL(lat, lon, radius);
@@ -177,7 +183,7 @@ public class HomeFragment extends ListFragment {
         googlePlacesReadTask.execute(toPass);
     }
 
-    private int getRadiusInMiles() {
+    private int getUserSelectedRadiusInMiles() {
         int radius = 10;
 
         if(mRadiusSelected.equals("5 miles"))
@@ -247,11 +253,19 @@ public class HomeFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<HashMap<String, String>> list) {
             Log.i(TAG, "Entering onPostExecute(): " + list.size() + " results returned");
+
+            // if no results are returned (list size of 0), extend the search (by 10 miles)
+            if(list.size() == 0) {
+                // since Google Places search API limits radius to 30 miles, no need to go over that...
+                if(mCurrentRadius < 30)
+                    readGooglePlaces(mCurrentLocation, mCurrentRadius+10);
+                return;
+            }
             // save search results as JSON
             JSONObject currentSearchResultsJson = new JSONObject();
             JSONArray resultsJsonArray = new JSONArray();
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss", Locale.getDefault());
                 String currentDate = sdf.format(new Date());
                 currentSearchResultsJson.put("search_date", currentDate);
                 // go through list of places returned up to the max number to show (10)
