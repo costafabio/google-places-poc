@@ -1,7 +1,5 @@
 package com.fabiocosta.googleplacespoc.ui.history;
 
-import android.graphics.Bitmap;
-
 public class History {
     public String date;
 

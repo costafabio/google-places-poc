@@ -53,13 +53,13 @@ public class HomeFragment extends ListFragment {
     private final String TAG = "GooglePlacesPOC";
     private HomeViewModel homeViewModel;
     private LocationManager locationManager;
-    private static final String GOOGLE_API_KEY = "";
     private PlaceAdapter mListAdapter;
     private static String mRadiusSelected = "";
     private static int counter = 0;
     private GooglePlaceHelper googlePlaceHelper;
     private FusedLocationProviderClient fusedLocationClient;
     private JSONArray mSavedSearchesJsonArray;
+    private static ArrayList<Place> arrayOfPlaces = new ArrayList<Place>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -67,13 +67,7 @@ public class HomeFragment extends ListFragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.list_fragment, container, false);
-        /*final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
+
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
 
         Button searchButton = (Button) root.findViewById(R.id.searchButton);
@@ -104,8 +98,6 @@ public class HomeFragment extends ListFragment {
         //ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(),
         //        R.array.Planets, android.R.layout.simple_list_item_1);
         // Construct the data source
-        //TODO: LOAD CURRENT LIST FROM STORAGE
-        ArrayList<Place> arrayOfPlaces = new ArrayList<Place>();
 
         // retrieve saved search results
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -128,13 +120,15 @@ public class HomeFragment extends ListFragment {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
 
-        googlePlaceHelper = new GooglePlaceHelper(GOOGLE_API_KEY);
+        googlePlaceHelper = new GooglePlaceHelper(GooglePlaceHelper.GOOGLE_API_KEY);
     }
 
 
     private void initiateSearch() {
         int radius = getRadiusInMiles();
         Log.i(TAG, "Initiating search with a radius of " + radius + " miles...");
+        // first clear contents of the Place array
+        arrayOfPlaces.clear();
         getCurrentLocation();
     }
 
@@ -217,26 +211,6 @@ public class HomeFragment extends ListFragment {
             } catch (Exception e) {
                 Log.d("Google Place Read Task", e.toString());
             }
-            /*// save search results as JSON
-            JSONObject currentSearchResultsJson = new JSONObject();
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
-                String currentDate = sdf.format(new Date());
-                currentSearchResultsJson.put("search_date", currentDate);
-                currentSearchResultsJson.put("search_results", (Object)googlePlacesData);
-                // save to disk
-                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                Log.i(TAG, "*** CURRENT SEARCH RESULTS: " + currentSearchResultsJson.toString());
-                if(mSavedSearchesJsonArray == null)
-                    mSavedSearchesJsonArray = new JSONArray();
-                mSavedSearchesJsonArray.put(currentSearchResultsJson);
-                editor.putString(getString(R.string.saved_current_search_results), mSavedSearchesJsonArray.toString());
-                editor.commit();
-                Log.i(TAG, "Search results saved to disk");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
             return googlePlacesData;
         }
 

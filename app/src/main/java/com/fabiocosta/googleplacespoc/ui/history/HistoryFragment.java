@@ -19,7 +19,6 @@ import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.fabiocosta.googleplacespoc.R;
-import com.fabiocosta.googleplacespoc.ui.home.HomeFragment;
 import com.fabiocosta.googleplacespoc.ui.home.Place;
 import com.fabiocosta.googleplacespoc.ui.home.PlaceAdapter;
 
@@ -75,13 +74,13 @@ public class HistoryFragment extends ListFragment implements AdapterView.OnItemC
         super.onActivityCreated(savedInstanceState);
 
         // Create the adapter to convert the array to views
-        HistoryAdapter historyAdapter = new HistoryAdapter(getContext(), mHistoryArray);
-        setListAdapter(historyAdapter);
-        getListView().setOnItemClickListener(this);
+        if(mHistoryArray != null) {
+            HistoryAdapter historyAdapter = new HistoryAdapter(getContext(), mHistoryArray);
+            setListAdapter(historyAdapter);
+            getListView().setOnItemClickListener(this);
+        }
         // indicate we are in the historical view
         mInDetailedViewMode = false;
-
-
     }
 
 

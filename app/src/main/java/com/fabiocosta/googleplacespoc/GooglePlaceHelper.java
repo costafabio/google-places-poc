@@ -3,6 +3,7 @@ package com.fabiocosta.googleplacespoc;
 import android.util.Log;
 
 public class GooglePlaceHelper {
+    public static final String GOOGLE_API_KEY = "";
     private static final String TAG = "GooglePlaceHelper";
     private static String googleApiKey = null;
 

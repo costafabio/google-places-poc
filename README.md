@@ -31,3 +31,7 @@ Grab the APK from ./extras/google-places-poc.apk and install to your device usin
 ```
 adb install google-places-poc.apk
 ```
+
+## Issues & workarounds
+
+Currently 
