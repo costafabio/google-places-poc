@@ -50,7 +50,7 @@ Search results example (Google CA):
 ![search-results-google](https://github.com/costafabio/google-places-poc/blob/master/extras/search-results-Google.png "Search results - Google CA")
 
 Search results example (Plantation, FL): 
-![search-results-plantation](https://github.com/costafabio/google-places-poc/blob/master/extras/search-results-Plantation.png "Search results - Plantation")
+![search-results-plantation](https://github.com/costafabio/google-places-poc/blob/master/extras/search-results-Plantation.jpg "Search results - Plantation")
 
 Search history tab: 
 ![search-results-plantation](https://github.com/costafabio/google-places-poc/blob/master/extras/search-history-tab.png "Search history tab")
